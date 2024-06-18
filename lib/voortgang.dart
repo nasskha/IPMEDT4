@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 import 'widget/line_chart_widget.dart'; // Adjust the import according to your file structure
 
 class VoortgangPage extends StatefulWidget {
@@ -129,6 +130,10 @@ class _VoortgangPageState extends State<VoortgangPage> {
     return ['1-7', '7-14', '14-21', '21-28'];
   }
 
+  String getCurrentMonth() {
+    return DateFormat('MMMM').format(DateTime.now());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -168,7 +173,7 @@ class _VoortgangPageState extends State<VoortgangPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 8),
+              padding: const EdgeInsets.only(top: 0),
               child: Row(
                 children: [
                   const Text(
@@ -224,7 +229,7 @@ class _VoortgangPageState extends State<VoortgangPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 8),
+              padding: const EdgeInsets.only(top: 2, left: 150),
               child: Row(
                 children: [
                   const Text(
@@ -279,6 +284,13 @@ class _VoortgangPageState extends State<VoortgangPage> {
                     ),
                   ),
                 ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 5.0), // Add padding to top
+              child: Text(
+                'Month: ${getCurrentMonth()}',
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
               ),
             ),
             Expanded(
