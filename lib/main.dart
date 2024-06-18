@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:ipmedt4_project/welcome.dart';
 import 'dart:convert';
 import 'voortgang.dart';
 import 'notitie.dart';
-import 'home.dart';
 import 'messages.dart';
 import 'coaching.dart';
 import 'colors.dart';
-import 'account.dart'; // Import the account page
-import 'welcome.dart';
-
+import 'account.dart';
+import 'log_in.dart'; // Import the log_in.dart file
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +58,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -69,8 +68,10 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
+  bool _showWelcomePage = true;
 
-  static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static const TextStyle optionStyle =
+  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   static const Color azalea = Color(0xFFF7CBCA);
   static const Color tacao = Color(0xFFF4A88A);
@@ -78,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
   static const Color cameo = Color(0xFFE9BDBE);
   static const Color coralTree = Color(0xFFA26769);
 
-  String selectedEmoji = ''; // Store selected emoji here
+  String selectedEmoji = '';
 
   void _onItemTapped(int index) {
     setState(() {
@@ -86,10 +87,22 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  void _hideWelcomePage() {
+    setState(() {
+      _showWelcomePage = false;
+    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => LogIn()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: _showWelcomePage
+          ? null
+          : AppBar(
         backgroundColor: Colors.white,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -102,7 +115,9 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AccountPage()), // Navigate to AccountPage
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          AccountPage(selectedEmoji: selectedEmoji)),
                 );
               },
               child: selectedEmoji.isNotEmpty
@@ -119,21 +134,29 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      body: IndexedStack(
+      body: _showWelcomePage
+          ? WelcomePage(
+        onContinue: _hideWelcomePage,
+      )
+          : IndexedStack(
         index: _selectedIndex,
         children: [
-          VoortgangPage(updateSelectedEmoji: (emoji) {
-            setState(() {
-              selectedEmoji = emoji;
-            });
-          }),
+          VoortgangPage(
+            updateSelectedEmoji: (emoji) {
+              setState(() {
+                selectedEmoji = emoji;
+              });
+            },
+          ),
           const NotitiePage(),
           const MessagesPage(),
           const CoachingPage(),
-          const AccountPage(selectedEmoji: selectedEmoji),
+          AccountPage(selectedEmoji: selectedEmoji),
         ],
       ),
-      bottomNavigationBar: ClipPath(
+      bottomNavigationBar: _showWelcomePage
+          ? null
+          : ClipPath(
         clipper: BottomNavBarClipper(),
         child: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
@@ -157,7 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
               label: 'Coaching',
               backgroundColor: coralTree,
             ),
-           ],
+          ],
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.black87,
           onTap: _onItemTapped,
