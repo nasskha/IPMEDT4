@@ -7,19 +7,21 @@ import 'home.dart';
 import 'messages.dart';
 import 'coaching.dart';
 import 'colors.dart';
-import 'account.dart';// Import the account page
+import 'account.dart'; // Import the account page
+import 'welcome.dart';
+
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'I-care',
+      title: 'ICare',
       theme: ThemeData(
         primaryColor: Colors.white,
         scaffoldBackgroundColor: Colors.white,
@@ -37,7 +39,7 @@ class MyApp extends StatelessWidget {
           secondary: Colors.deepPurple,
         ),
         fontFamily: 'Archivo',
-        textTheme: TextTheme(
+        textTheme: const TextTheme(
           bodyLarge: TextStyle(fontFamily: 'Archivo'),
           bodyMedium: TextStyle(fontFamily: 'Archivo'),
           titleLarge: TextStyle(fontFamily: 'Archivo'),
@@ -51,13 +53,13 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'I-care'),
+      home: const MyHomePage(title: 'ICare'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({super.key, required this.title});
 
   final String title;
 
@@ -76,41 +78,12 @@ class _MyHomePageState extends State<MyHomePage> {
   static const Color cameo = Color(0xFFE9BDBE);
   static const Color coralTree = Color(0xFFA26769);
 
+  String selectedEmoji = ''; // Store selected emoji here
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
-  }
-
-  Future<void> saveEmojiToBackend(String emoji) async {
-    final response = await http.post(
-      Uri.parse('http://your-backend-url.com/api/voortgang'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        'Authorization': 'Bearer YOUR_API_TOKEN', // Add your authentication token here
-      },
-      body: jsonEncode(<String, dynamic>{
-        'datum': DateTime.now().toIso8601String(),
-        'emoji': emoji,
-        'progress': 0, // Set progress value appropriately
-      }),
-    );
-
-    if (response.statusCode == 201) {
-      print('Emoji saved successfully');
-    } else {
-      print('Failed to save emoji: ${response.body}');
-    }
-  }
-
-  String selectedEmoji = ''; // Store selected emoji here
-
-  void updateSelectedEmoji(String emoji) {
-    setState(() {
-      selectedEmoji = emoji; // Update selected emoji
-    });
-
-    saveEmojiToBackend(emoji); // Save emoji to backend
   }
 
   @override
@@ -119,24 +92,28 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              child: Text(
-                widget.title,
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.black),
-              ),
+            Text(
+              widget.title,
+              style: const TextStyle(color: Colors.black),
             ),
-            GestureDetector( // Add GestureDetector for navigation
+            GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => AccountPage()), // Navigate to AccountPage
+                  MaterialPageRoute(builder: (context) => const AccountPage()), // Navigate to AccountPage
                 );
               },
-              child: Text(
+              child: selectedEmoji.isNotEmpty
+                  ? Text(
                 selectedEmoji,
-                style: const TextStyle(fontSize: 24),
+                style: const TextStyle(fontSize: 30),
+              )
+                  : const Icon(
+                Icons.account_circle,
+                color: Colors.grey,
+                size: 30,
               ),
             ),
           ],
@@ -145,13 +122,15 @@ class _MyHomePageState extends State<MyHomePage> {
       body: IndexedStack(
         index: _selectedIndex,
         children: [
-          HomePage(),
-          NotitiePage(),
-          VoortgangPage(updateSelectedEmoji: updateSelectedEmoji),
-          MessagesPage(),
-          CoachingPage(),
-          AccountPage(),
-
+          VoortgangPage(updateSelectedEmoji: (emoji) {
+            setState(() {
+              selectedEmoji = emoji;
+            });
+          }),
+          const NotitiePage(),
+          const MessagesPage(),
+          const CoachingPage(),
+          const AccountPage(selectedEmoji: selectedEmoji),
         ],
       ),
       bottomNavigationBar: ClipPath(
@@ -161,17 +140,12 @@ class _MyHomePageState extends State<MyHomePage> {
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
-              backgroundColor: azalea,
+              backgroundColor: albescentWhite,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.business),
               label: 'Notes',
               backgroundColor: tacao,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.trending_up),
-              label: 'Progress',
-              backgroundColor: albescentWhite,
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.message),
@@ -183,12 +157,7 @@ class _MyHomePageState extends State<MyHomePage> {
               label: 'Coaching',
               backgroundColor: coralTree,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.account_circle),
-              label: 'Account',
-              backgroundColor: darkPinky, // Dark pinky color
-            ),
-          ],
+           ],
           currentIndex: _selectedIndex,
           selectedItemColor: Colors.black87,
           onTap: _onItemTapped,
@@ -218,5 +187,3 @@ class BottomNavBarClipper extends CustomClipper<Path> {
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
-//ik moet de url van de backend aanpassen!!!!!!!
-//anders werkt het niet.
