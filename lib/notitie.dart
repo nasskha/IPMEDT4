@@ -160,10 +160,7 @@ class _NotitiePageState extends State<NotitiePage> {
               ),
               actions: [
                 Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.white,
-                  ),
+                  
                   child: TextButton(
                     child: const Text(
                       'Cancel',
