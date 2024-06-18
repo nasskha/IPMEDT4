@@ -138,7 +138,7 @@ class _VoortgangPageState extends State<VoortgangPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Status:'),
+        title: const Text('How are you feeling today?'),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0), // Add horizontal padding
