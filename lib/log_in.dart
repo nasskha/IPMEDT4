@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'main.dart'; // Import your main.dart where MyApp is defined
 import 'sign_up.dart';
-import 'main.dart';
 
 class LogIn extends StatefulWidget {
   const LogIn({Key? key}) : super(key: key);
 
   @override
   _LogInState createState() => _LogInState();
-  }
+}
 
 class _LogInState extends State<LogIn> {
   final TextEditingController _usernameController = TextEditingController();
@@ -17,7 +17,7 @@ class _LogInState extends State<LogIn> {
   void _navigateToSignUp(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SignUp()), // Change SignUpPage to your sign-up page widget
+      MaterialPageRoute(builder: (context) => SignUp()), // Navigate to sign up page
     );
   }
 
@@ -25,6 +25,23 @@ class _LogInState extends State<LogIn> {
     setState(() {
       _isButtonDisabled = _usernameController.text.isEmpty || _passwordController.text.isEmpty;
     });
+  }
+
+  void _handleLogin(BuildContext context) {
+    // Simulate login logic; replace with actual authentication logic
+    String username = _usernameController.text.trim();
+    String password = _passwordController.text.trim();
+
+    if (username == 'admin' && password == 'password') {
+      // Navigate to main application screen (MyApp)
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const MyApp()),
+      );
+    } else {
+      // Show error dialog or message for invalid credentials (not implemented here)
+      print('Invalid credentials');
+    }
   }
 
   @override
@@ -45,28 +62,24 @@ class _LogInState extends State<LogIn> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
-        child: Center( // Add SingleChildScrollView here
+        child: Center(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center, // Centreert de inhoud verticaal
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              //LOGO
+              // Logo and subtitle
               Padding(
-                padding: const EdgeInsets.only(
-                    top: 45,
-                    right: 30.0), // Voeg extra ruimte toe aan de rechterkant van de tekst
+                padding: const EdgeInsets.only(top: 45, right: 30.0),
                 child: Text(
                   'iCare',
                   style: TextStyle(
                     fontSize: 48,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF5C5470), // Vervang door de gewenste kleur
+                    color: Color(0xFF5C5470),
                   ),
                 ),
               ),
-
               Padding(
-                padding: const EdgeInsets.only(
-                    left: 60.0), // Adjust the left padding as needed
+                padding: const EdgeInsets.only(left: 60.0),
                 child: Text(
                   'Mental health matters',
                   style: TextStyle(
@@ -76,12 +89,9 @@ class _LogInState extends State<LogIn> {
                 ),
               ),
 
-              //Log In
+              // Log In title
               Padding(
-                padding: const EdgeInsets.only(
-                  top: 60.0, // Adjust the space between the subtitle and login title
-                  left: 50,
-                ),
+                padding: const EdgeInsets.only(top: 60.0, left: 50),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -95,10 +105,9 @@ class _LogInState extends State<LogIn> {
                 ),
               ),
 
+              // Not a member text and sign up link
               Padding(
-                padding: const EdgeInsets.only(
-                  left: 50.0,
-                ),
+                padding: const EdgeInsets.only(left: 50.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Row(
@@ -127,13 +136,9 @@ class _LogInState extends State<LogIn> {
                 ),
               ),
 
-              //Username&Password
+              // Username and Password fields
               Padding(
-                padding: const EdgeInsets.only(
-                  top: 30.0, // Adjust the space between the login title and input fields
-                  left: 30.0,
-                  right: 30.0,
-                ),
+                padding: const EdgeInsets.only(top: 30.0, left: 30.0, right: 30.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -145,7 +150,7 @@ class _LogInState extends State<LogIn> {
                         border: OutlineInputBorder(),
                       ),
                     ),
-                    SizedBox(height: 10), // Add space between username and password fields
+                    SizedBox(height: 10),
                     TextField(
                       controller: _passwordController,
                       obscureText: true,
@@ -156,11 +161,11 @@ class _LogInState extends State<LogIn> {
                       ),
                     ),
 
-                    //Remember Me
-                    SizedBox(height: 10), // Add space between password field and checkbox
+                    // Remember Me checkbox
+                    SizedBox(height: 10),
                     Row(
                       children: [
-                        Checkbox(value: false, onChanged: (value) {}), // Remember me checkbox
+                        Checkbox(value: false, onChanged: (value) {}),
                         Text('Remember me'),
                       ],
                     ),
@@ -168,33 +173,31 @@ class _LogInState extends State<LogIn> {
                 ),
               ),
 
-              //Button
-              const SizedBox(height: 1), // Ruimte tussen de subtitel en de knop
+              // Log in button
+              const SizedBox(height: 1),
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: ElevatedButton(
-                  onPressed: _isButtonDisabled ? null : () {
-                    // Actie wanneer de knop wordt ingedrukt
-                    print("Log in button pressed!");
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MyApp()),
-                    );
+                  onPressed: _isButtonDisabled
+                      ? null
+                      : () {
+                    // Handle login button press
+                    _handleLogin(context);
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
-                      _isButtonDisabled ? Colors.grey : Color(0xFF700B97), // Change button color here
+                      _isButtonDisabled ? Colors.grey : Color(0xFF700B97),
                     ),
                     minimumSize: MaterialStateProperty.all<Size>(
-                      Size(200, 50), // Set the minimum width and height of the button
+                      Size(200, 50),
                     ),
                   ),
                   child: const Text(
                     "Log in",
                     style: TextStyle(
-                      color: Colors.white, // Change text color here
+                      color: Colors.white,
                       fontSize: 16,
-                    ), // Tekst op de knop
+                    ),
                   ),
                 ),
               ),
