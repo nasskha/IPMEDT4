@@ -17,11 +17,11 @@ class VoortgangPage extends StatefulWidget {
 
 class _VoortgangPageState extends State<VoortgangPage> {
   final List<String> emojis = [
-    '😄', '😊', '😔', '😢', '😡', '😴', '🥳', '😎' // Add more emojis as needed
+    '😔','😢','😡','😴','😊','😄','😎','🥳' // Add more emojis as needed
   ];
 
   final Map<String, double> emojiToYValue = {
-    '😄': 8.0, '😊': 7.0, '😔': 4.0, '😢': 3.0, '😡': 2.0, '😴': 5.0, '🥳': 6.0, '😎': 7.0
+    '😔':1.0, '😢':2.0, '😡':3.0, '😴':4.0, '😊':5.0, '😄':6.0, '😎':7.0, '🥳': 8.0
   };
 
   List<FlSpot> points = [];
@@ -31,8 +31,16 @@ class _VoortgangPageState extends State<VoortgangPage> {
   @override
   void initState() {
     super.initState();
+    clearSavedData();
     fetchProgressData(_selectedWeek);
-    loadSavedData(_selectedWeek); // Load saved data when the app starts
+  }
+
+  Future<void> clearSavedData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    setState(() {
+      points = [];
+    });
   }
 
   Future<void> fetchProgressData(String period) async {
@@ -173,12 +181,12 @@ class _VoortgangPageState extends State<VoortgangPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 0),
+              padding: const EdgeInsets.only(top:0),
               child: Row(
                 children: [
                   const Text(
                     'Mood Graph',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const Spacer(), // Add space between text and dropdown
                   Container(
@@ -210,7 +218,7 @@ class _VoortgangPageState extends State<VoortgangPage> {
                                 color: Colors.white,
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8.0), // Make the items smaller
+                                padding: const EdgeInsets.symmetric(horizontal: 17.0), // Make the items smaller
                                 child: Text(
                                   value,
                                   style: const TextStyle(
@@ -229,11 +237,11 @@ class _VoortgangPageState extends State<VoortgangPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 2, left: 150),
+              padding: const EdgeInsets.only(top: 0, left: 170),
               child: Row(
                 children: [
                   const Text(
-                    'Select Week',
+                    'Select Week:',
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                   ),
                   const Spacer(), // Add space between text and dropdown
@@ -268,7 +276,7 @@ class _VoortgangPageState extends State<VoortgangPage> {
                                 color: Colors.white,
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8.0), // Make the items smaller
+                                padding: const EdgeInsets.symmetric(horizontal: 20.0), // Make the items smaller
                                 child: Text(
                                   value,
                                   style: const TextStyle(
@@ -287,7 +295,7 @@ class _VoortgangPageState extends State<VoortgangPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 5.0), // Add padding to top
+              padding: const EdgeInsets.only(top: 0, left: 250), // Add padding to top
               child: Text(
                 'Month: ${getCurrentMonth()}',
                 style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
@@ -295,7 +303,7 @@ class _VoortgangPageState extends State<VoortgangPage> {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(top: 8), // Add padding to top
+                padding: const EdgeInsets.only(top: 0), // Add padding to top
                 child: LineChartWidget(
                   points: points,
                   selectedTimeline: _selectedTimeline,
