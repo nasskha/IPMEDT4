@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:ipmedt4_project/welcome.dart';
-import 'dart:convert';
 import 'voortgang.dart';
 import 'notitie.dart';
 import 'messages.dart';
 import 'coaching.dart';
-import 'colors.dart';
 import 'account.dart';
-import 'log_in.dart'; // Import the log_in.dart file
 
 void main() {
   runApp(const MyApp());
@@ -52,15 +47,16 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'ICare'),
+      home: const MyHomePage(title: 'ICare', initialPage: 0), // Ensure initialPage is set
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+  const MyHomePage({Key? key, required this.title, this.initialPage = 0}) : super(key: key);
 
   final String title;
+  final int initialPage;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -68,7 +64,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
-  bool _showWelcomePage = true;
+  bool _showWelcomePage = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialPage;
+  }
 
   static const TextStyle optionStyle =
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -91,10 +93,6 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _showWelcomePage = false;
     });
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => LogIn()),
-    );
   }
 
   @override
@@ -209,4 +207,21 @@ class BottomNavBarClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
+
+// Dummy WelcomePage implementation
+class WelcomePage extends StatelessWidget {
+  final VoidCallback onContinue;
+
+  const WelcomePage({required this.onContinue});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ElevatedButton(
+        onPressed: onContinue,
+        child: const Text("Continue"),
+      ),
+    );
+  }
 }
