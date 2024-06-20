@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 class MessengerScreen extends StatelessWidget {
@@ -5,7 +6,21 @@ class MessengerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Messenger'),
+        title: Container(
+          padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+          decoration: BoxDecoration(
+            color: Color.fromRGBO(193, 183, 164, 1), // Define cameo color using RGB values
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          child: Text(
+            'Messenger',
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
         actions: [
           IconButton(
             icon: Icon(Icons.add),
@@ -21,8 +36,8 @@ class MessengerScreen extends StatelessWidget {
 }
 
 class ConversationList extends StatelessWidget {
-  // lijst met namen
-  final List<String> friendnames =[
+  // List of friend names
+  final List<String> friendnames = [
     'Alice',
     'Bob',
     'Charlie',
@@ -34,6 +49,8 @@ class ConversationList extends StatelessWidget {
     'Ivy',
     'Jack'
   ];
+
+  // List of last messages
   final List<String> lastMessages = [
     'Hey, how are you?',
     'What\'s up?',
@@ -46,18 +63,37 @@ class ConversationList extends StatelessWidget {
     'Remember to call me!',
     'Let\'s plan our trip!',
   ];
+
+  // List of profile emojis
+  final List<String> profileEmojis = [
+    '😄',
+    '😊',
+    '😔',
+    '😢',
+    '😡',
+    '😴',
+    '🥳',
+    '😎',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: friendnames.length,
       itemBuilder: (context, index) {
+        // Generate a random index for profile emojis
+        int randomIndex = Random().nextInt(profileEmojis.length);
+
         return Container(
           decoration: BoxDecoration(
             border: Border.all(color: Colors.black, width: 1.0),
             borderRadius: BorderRadius.all(Radius.circular(8.0)),
           ),
-          margin: EdgeInsets.all(8.0), // Voeg marges toe voor de visuele scheiding
+          margin: EdgeInsets.all(8.0), // Add margins for visual separation
           child: ListTile(
+            leading: CircleAvatar(
+              child: Text(profileEmojis[randomIndex], style: TextStyle(fontSize: 20)),
+            ),
             title: Text(friendnames[index]),
             subtitle: Text(lastMessages[index]),
             onTap: () {
@@ -80,25 +116,61 @@ class ChatScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get friend's name and profile emoji
+    String friendName = ConversationList().friendnames[friendIndex];
+    String profileEmoji = ConversationList().profileEmojis[friendIndex % ConversationList().profileEmojis.length];
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chat with Friend $friendIndex'),
+        title: Row(
+          children: [
+            SizedBox(width: 8), // Add some left padding for space
+            CircleAvatar(
+              child: Text(profileEmoji, style: TextStyle(fontSize: 20)),
+            ),
+            SizedBox(width: 8), // Add space between avatar and name
+            Expanded(
+              child: Text(
+                friendName,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
       ),
-      body: ChatMessages(),
+      body: ChatMessages(friendName: friendName),
     );
   }
 }
 
 class ChatMessages extends StatelessWidget {
+  final String friendName;
+
+  ChatMessages({required this.friendName});
+
+  // Generate random messages for the chat
+  List<String> generateRandomMessages() {
+    List<String> messages = [];
+    int messageCount = Random().nextInt(10) + 5; // Generate between 5 to 14 messages
+
+    for (int i = 0; i < messageCount; i++) {
+      messages.add('Message $i from $friendName');
+    }
+
+    return messages;
+  }
+
   @override
   Widget build(BuildContext context) {
+    List<String> messages = generateRandomMessages();
+
     return Column(
       children: [
         Expanded(
           child: ListView.builder(
-            itemCount: 20, // Example message count
+            itemCount: messages.length,
             itemBuilder: (context, index) {
-              return MessageBubble(isSentByMe: index % 2 == 0, text: 'Message $index');
+              return MessageBubble(isSentByMe: index % 2 == 0, text: messages[index]);
             },
           ),
         ),
@@ -152,4 +224,10 @@ class MessageBubble extends StatelessWidget {
       ),
     );
   }
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: MessengerScreen(),
+  ));
 }
