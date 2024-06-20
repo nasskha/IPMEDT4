@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'main.dart'; // Import your main.dart where MyApp is defined
+import 'main.dart';
 import 'sign_up.dart';
 
 class LogIn extends StatefulWidget {
@@ -17,31 +17,24 @@ class _LogInState extends State<LogIn> {
   void _navigateToSignUp(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SignUp()), // Navigate to sign up page
+      MaterialPageRoute(builder: (context) => SignUp()),
     );
   }
 
   void _checkFields() {
     setState(() {
-      _isButtonDisabled = _usernameController.text.isEmpty || _passwordController.text.isEmpty;
+      _isButtonDisabled = _usernameController.text.isEmpty ||
+          _passwordController.text.isEmpty;
     });
   }
 
   void _handleLogin(BuildContext context) {
-    // Simulate login logic; replace with actual authentication logic
-    String username = _usernameController.text.trim();
-    String password = _passwordController.text.trim();
-
-    if (username == 'admin' && password == 'password') {
-      // Navigate to main application screen (MyApp)
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const MyApp()),
-      );
-    } else {
-      // Show error dialog or message for invalid credentials (not implemented here)
-      print('Invalid credentials');
-    }
+    // Simulate login logic
+    // For demonstration, navigate to the VoortgangPage on successful login
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const MyHomePage(title: 'ICare', initialPage: 0)),
+    );
   }
 
   @override
@@ -66,9 +59,11 @@ class _LogInState extends State<LogIn> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              // Logo and subtitle
               Padding(
-                padding: const EdgeInsets.only(top: 45, right: 30.0),
+                padding: const EdgeInsets.only(
+                  top: 45,
+                  right: 30.0,
+                ),
                 child: Text(
                   'iCare',
                   style: TextStyle(
@@ -79,7 +74,9 @@ class _LogInState extends State<LogIn> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 60.0),
+                padding: const EdgeInsets.only(
+                  left: 60.0,
+                ),
                 child: Text(
                   'Mental health matters',
                   style: TextStyle(
@@ -88,10 +85,11 @@ class _LogInState extends State<LogIn> {
                   ),
                 ),
               ),
-
-              // Log In title
               Padding(
-                padding: const EdgeInsets.only(top: 60.0, left: 50),
+                padding: const EdgeInsets.only(
+                  top: 60.0,
+                  left: 50,
+                ),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -104,10 +102,10 @@ class _LogInState extends State<LogIn> {
                   ),
                 ),
               ),
-
-              // Not a member text and sign up link
               Padding(
-                padding: const EdgeInsets.only(left: 50.0),
+                padding: const EdgeInsets.only(
+                  left: 50.0,
+                ),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Row(
@@ -135,10 +133,12 @@ class _LogInState extends State<LogIn> {
                   ),
                 ),
               ),
-
-              // Username and Password fields
               Padding(
-                padding: const EdgeInsets.only(top: 30.0, left: 30.0, right: 30.0),
+                padding: const EdgeInsets.only(
+                  top: 30.0,
+                  left: 30.0,
+                  right: 30.0,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -160,8 +160,6 @@ class _LogInState extends State<LogIn> {
                         border: OutlineInputBorder(),
                       ),
                     ),
-
-                    // Remember Me checkbox
                     SizedBox(height: 10),
                     Row(
                       children: [
@@ -172,16 +170,14 @@ class _LogInState extends State<LogIn> {
                   ],
                 ),
               ),
-
-              // Log in button
-              const SizedBox(height: 1),
+              SizedBox(height: 1),
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: ElevatedButton(
                   onPressed: _isButtonDisabled
                       ? null
                       : () {
-                    // Handle login button press
+                    // Perform login logic here
                     _handleLogin(context);
                   },
                   style: ButtonStyle(
@@ -207,10 +203,4 @@ class _LogInState extends State<LogIn> {
       ),
     );
   }
-}
-
-void main() {
-  runApp(const MaterialApp(
-    home: LogIn(),
-  ));
 }
